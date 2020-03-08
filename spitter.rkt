@@ -31,6 +31,11 @@
                  #t)))
          (define/override (on-default-event event) (void))
          (define/public (spit)
+           (if (eq? (send this get-character (send this get-end-position)) #\newline)
+               (void)
+               (send this insert #\newline))
+           (for ([i (send this find-string-all (string #\newline) 'backward)])
+             (send this insert #\newline i))
            (call-with-output-file "output" #:exists 'append
              (λ (out)
                (send this save-port out 'text)))
