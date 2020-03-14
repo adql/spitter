@@ -26,12 +26,13 @@
   ;; Main text entry object
   (new (class text%
          (super-new)
+         (define deleted-chars 0)
+         (define/augment (after-insert s l)
+           (if (> deleted-chars 0) (set! deleted-chars (- deleted-chars 1)) (void)))
+         (define/augment (after-delete s l)
+           (set! deleted-chars (+ deleted-chars 1)))
          (define/augment (can-delete? s l)
-           ;; Currenltly permitting only a word deletion
-           (let ([c (send this get-character s)])
-             (if (or (eq? c #\newline) (eq? c #\space))
-                 #f
-                 #t)))
+           (< deleted-chars 20))
          (define/override (on-default-event event) (void)) ;Eliminate any mouse events
          (define/public (spit)
            ;; Make sure the text ends with a newline:
