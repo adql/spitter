@@ -39,8 +39,6 @@
            (call-with-output-file "output" #:exists 'append
              (λ (out)
                (send this save-port out 'text)))
-           (send this erase))
-         (define/augment (after-save-file s)
            (send this erase)))))
 
 (define keymap (new keymap%))
