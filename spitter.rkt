@@ -22,17 +22,23 @@
 
 (define pane (new horizontal-pane% [parent frame]))
 
+(define (get-last-character t)
+  (send t get-character (- (send t get-end-position) 1)))
+
 (define spitter
   ;; Main text entry object
   (new (class text%
          (super-new)
-         (define deleted-chars 0)
+         (define deleted-words 0)
          (define/augment (after-insert s l)
-           (if (> deleted-chars 0) (set! deleted-chars (- deleted-chars 1)) (void)))
-         (define/augment (after-delete s l)
-           (set! deleted-chars (+ deleted-chars 1)))
+           (if (and (> deleted-words 0)
+                    (eq? (get-last-character this) #\space))
+               (set! deleted-words (- deleted-words 1)) (void)))
+         (define/augment (on-delete s l)
+           (if (eq? (get-last-character this) #\space)
+               (set! deleted-words (+ deleted-words 1)) (void)))
          (define/augment (can-delete? s l)
-           (< deleted-chars 20))
+           (< deleted-words 3))
          (define/override (on-default-event event) (void)) ;Eliminate any mouse events
          (define/public (spit)
            ;; Make sure the text ends with a newline:
