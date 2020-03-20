@@ -42,7 +42,7 @@
          (define/override (on-default-event event) (void)) ;Eliminate any mouse events
          (define/public (spit)
            ;; Make sure the text ends with a newline:
-           (if (eq? (send this get-character (send this get-end-position)) #\newline)
+           (if (eq? (get-last-character this) #\newline)
                (void)
                (send this insert #\newline))
            ;; Make a double newline between paragraphs
