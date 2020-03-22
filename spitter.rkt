@@ -1,5 +1,7 @@
 #lang racket/gui
 
+(provide start-spitter)
+
 (define frame
   (new (class frame%
          (super-new)
@@ -65,4 +67,7 @@
        [editor spitter]
        [style (list 'no-border 'hide-hscroll 'hide-vscroll 'transparent)]))
 
-(send frame show #t)
+(define (start-spitter)
+  (send frame show #t))
+(module+ test
+  (start-spitter))
